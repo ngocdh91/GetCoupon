@@ -1,36 +1,50 @@
 package coupon.com.getcoupon;
 
 import android.content.res.Resources;
+import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import coupon.com.getcoupon.fragment.GetCoupoundFragmentAdapter;
 import coupon.com.getcoupon.widget.DrawerArrowDrawable;
+
 import static android.view.Gravity.START;
 
 public class MainActivity extends AppCompatActivity {
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawer;
+    @BindView(R.id.drawer_indicator)
+    ImageView mImageView;
+    @BindView(R.id.viewpager)
+    ViewPager mPager;
+    @BindView(R.id.tb_slide)
+    TabLayout mSlide;
+
     private DrawerArrowDrawable drawerArrowDrawable;
     private float offset;
     private boolean flipped;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        final ImageView imageView = (ImageView) findViewById(R.id.drawer_indicator);
+        ButterKnife.bind(this);
         final Resources resources = getResources();
 
         drawerArrowDrawable = new DrawerArrowDrawable(resources);
-        drawerArrowDrawable.setStrokeColor(resources.getColor(R.color.light_gray));
-        imageView.setImageDrawable(drawerArrowDrawable);
-
-        drawer.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
-            @Override public void onDrawerSlide(View drawerView, float slideOffset) {
+        drawerArrowDrawable.setStrokeColor(ContextCompat.getColor(this, R.color.white));
+        mImageView.setImageDrawable(drawerArrowDrawable);
+        mDrawer.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
                 offset = slideOffset;
-
-                // Sometimes slideOffset ends up so close to but not quite 1 or 0.
                 if (slideOffset >= .995) {
                     flipped = true;
                     drawerArrowDrawable.setFlip(flipped);
@@ -38,20 +52,21 @@ public class MainActivity extends AppCompatActivity {
                     flipped = false;
                     drawerArrowDrawable.setFlip(flipped);
                 }
-
                 drawerArrowDrawable.setParameter(offset);
             }
         });
-
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                if (drawer.isDrawerVisible(START)) {
-                    drawer.closeDrawer(START);
+        mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mDrawer.isDrawerVisible(START)) {
+                    mDrawer.closeDrawer(START);
                 } else {
-                    drawer.openDrawer(START);
+                    mDrawer.openDrawer(START);
                 }
             }
         });
+        mPager.setAdapter(new GetCoupoundFragmentAdapter(getSupportFragmentManager(), this));
+        mSlide.setupWithViewPager(mPager);
 
     }
 }
