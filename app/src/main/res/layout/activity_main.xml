@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <!-- Action-bar looking view -->
     <LinearLayout
@@ -22,12 +21,45 @@
             android:background="@drawable/drawer_selector"
             android:scaleType="centerInside" />
 
-        <ImageView
+        <LinearLayout
             android:id="@+id/imv_app_logo"
             android:layout_width="wrap_content"
             android:layout_height="?attr/actionBarSize"
-            android:scaleType="centerInside"
-            android:src="@drawable/logo_getcoupon" />
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/spacing_normal"
+            android:paddingTop="@dimen/spacing_normal">
+
+            <ImageView
+                android:layout_width="@dimen/imv_tag"
+                android:layout_height="@dimen/imv_tag"
+                android:layout_gravity="center"
+                android:paddingBottom="@dimen/spacing_normal"
+                android:paddingTop="@dimen/spacing_normal"
+                android:src="@drawable/ic_tag" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:paddingBottom="@dimen/spacing_normal">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_app_name"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/title_text_size" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_title"
+                    android:text="@string/title_slogan"
+                    android:textColor="@color/white" />
+
+            </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
 
