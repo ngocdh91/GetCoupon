@@ -4,6 +4,11 @@
     <style name="AppTheme" parent="MaterialDrawerTheme.Light">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <style name="ToolbarColoredBackArrow" parent="AppTheme">
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 
 </resources>

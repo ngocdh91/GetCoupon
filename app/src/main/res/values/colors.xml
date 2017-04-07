@@ -70,5 +70,6 @@
     <color name="white_tran_75">#e6ffffff</color>
     <color name="customer_name">#236093</color>
     <color name="dark_gray_pressed">#373e44</color>
+    <color name="category_bg">#30FF4081</color>
 
 </resources>

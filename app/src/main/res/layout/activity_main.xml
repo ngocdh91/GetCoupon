@@ -27,21 +27,21 @@
             android:layout_height="?attr/actionBarSize"
             android:gravity="center"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/spacing_normal"
-            android:paddingTop="@dimen/spacing_normal">
+            android:paddingBottom="@dimen/element_spacing_normal"
+            android:paddingTop="@dimen/element_spacing_normal">
 
             <ImageView
                 android:layout_width="@dimen/imv_tag"
                 android:layout_height="@dimen/imv_tag"
                 android:layout_gravity="center"
-                android:paddingBottom="@dimen/spacing_normal"
-                android:paddingTop="@dimen/spacing_normal"
+                android:paddingBottom="@dimen/element_spacing_normal"
+                android:paddingTop="@dimen/element_spacing_normal"
                 android:src="@drawable/ic_tag" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:paddingBottom="@dimen/spacing_normal">
+                android:paddingBottom="@dimen/element_spacing_normal">
 
                 <TextView
                     android:id="@+id/tv_title"
