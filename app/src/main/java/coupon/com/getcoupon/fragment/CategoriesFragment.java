@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 import coupon.com.getcoupon.R;
 import coupon.com.getcoupon.adapter.CategoryAdapter;
 import coupon.com.getcoupon.model.Category;
+import io.realm.Realm;
 
 /**
  * Created by ngoc on 4/6/2017.
@@ -26,6 +27,7 @@ public class CategoriesFragment extends Fragment {
     @BindView(R.id.rv_category)
     RecyclerView rvCategory;
     List<Category> mCategories = new ArrayList<>();
+    Realm mRealm;
     private CategoryAdapter mAdapter;
 
     @Nullable
@@ -33,7 +35,8 @@ public class CategoriesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.category_fragment, container, false);
         ButterKnife.bind(this, rootView);
-        mAdapter = new CategoryAdapter(mCategories, getActivity());
+        mRealm = Realm.getDefaultInstance();
+        mAdapter = new CategoryAdapter(mCategories, getActivity(), mRealm);
         addCategories();
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
         rvCategory.setLayoutManager(mLayoutManager);

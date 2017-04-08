@@ -8,21 +8,42 @@
     android:orientation="vertical">
 
     <ImageView
-        android:transitionName="imvTest"
         android:id="@+id/imv_category"
         android:layout_width="match_parent"
         android:layout_height="@dimen/imv_item_category"
         android:background="@drawable/imv_border"
-        android:scaleType="centerInside" />
+        android:scaleType="centerInside"
+        android:transitionName="@string/transition_imv_category" />
 
-    <TextView
-        android:id="@+id/tv_category"
+    <LinearLayout
+        android:id="@+id/ln_wrap_category_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/text_border_background"
+        android:gravity="center"
+        android:orientation="horizontal"
         android:padding="@dimen/element_padding_normal"
-        android:textAlignment="center"
-        android:transitionName="@string/transition_title"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/tv_category"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:orientation="horizontal"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:transitionName="@string/transition_title" />
+
+        <ImageView
+            android:id="@+id/imv_like"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:transitionName="@string/transition_like"
+            android:layout_weight="0.2"
+            android:src="@drawable/ic_like" />
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -14,9 +14,12 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import coupon.com.getcoupon.CategoryDetailActivity;
 import coupon.com.getcoupon.R;
 import coupon.com.getcoupon.model.Category;
+import io.realm.Realm;
 
 import static coupon.com.getcoupon.CategoryDetailActivity.TRANSITION_IMAGE;
 import static coupon.com.getcoupon.CategoryDetailActivity.TRANSITION_TITLE;
@@ -28,10 +31,13 @@ import static coupon.com.getcoupon.CategoryDetailActivity.TRANSITION_TITLE;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
     private final Activity activity;
     List<Category> mCategories;
+    Realm mRealm;
 
-    public CategoryAdapter(List<Category> mCategories, Activity activity) {
+    public CategoryAdapter(List<Category> mCategories, Activity activity, Realm mRealm) {
         this.mCategories = mCategories;
         this.activity = activity;
+        this.mRealm = mRealm;
+
     }
 
     @Override
@@ -43,10 +49,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     @Override
     public void onBindViewHolder(final CategoryViewHolder holder, int position) {
-        holder.mRoot.setOnClickListener(new View.OnClickListener() {
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                startActivityTransition(holder.textView, holder.imageView, holder.getAdapterPosition());
+                startActivityTransition(holder.textView, holder.imageView, holder.imvLike, holder.getAdapterPosition());
             }
         });
         switch (mCategories.get(position).getCategoryId()) {
@@ -93,16 +99,23 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                 holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_van_phong_pham));
                 break;
         }
+
+        if (mRealm.where(Category.class).equalTo(Category.CATEGORY_ID, mCategories.get(holder.getAdapterPosition()).getCategoryId()).findAll().size() != 0) {
+            holder.imvLike.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_like_pink));
+            mCategories.get(holder.getAdapterPosition()).setSelected(true);
+        } else
+            holder.imvLike.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_like));
         holder.textView.setText(mCategories.get(position).getName());
     }
 
-    private void startActivityTransition(TextView textView, ImageView imageview, int position) {
+    private void startActivityTransition(TextView textView, ImageView imageview, ImageView imvLike, int position) {
         Intent intent = new Intent(activity, CategoryDetailActivity.class);
-        Pair<View, String> p1 = Pair.create((View) textView, "transitionTitle");
-        Pair<View, String> p2 = Pair.create((View) imageview, "imvTest");
+        Pair<View, String> p1 = Pair.create((View) textView, activity.getString(R.string.transition_title));
+        Pair<View, String> p2 = Pair.create((View) imageview, activity.getString(R.string.transition_imv_category));
+        Pair<View, String> p3 = Pair.create((View) imvLike, activity.getString(R.string.transition_like));
         intent.putExtra(TRANSITION_TITLE, mCategories.get(position).getName());
         intent.putExtra(TRANSITION_IMAGE, mCategories.get(position).getCategoryId());
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, p1, p2);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, p1, p2, p3);
         activity.startActivity(intent, options.toBundle());
     }
 
@@ -112,15 +125,38 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     }
 
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.imv_category)
         ImageView imageView;
+        @BindView(R.id.imv_like)
+        ImageView imvLike;
+        @BindView(R.id.tv_category)
         TextView textView;
+        @BindView(R.id.ln_root)
         LinearLayout mRoot;
+        @BindView(R.id.ln_wrap_category_content)
+        LinearLayout mLnWrapContent;
+        Category mCategory;
 
         public CategoryViewHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.imv_category);
-            textView = (TextView) itemView.findViewById(R.id.tv_category);
-            mRoot = (LinearLayout) itemView.findViewById(R.id.ln_root);
+            ButterKnife.bind(this, itemView);
+            mLnWrapContent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCategory = mCategories.get(getAdapterPosition());
+                    mRealm.beginTransaction();
+                    mCategory.setSelected(!mCategory.isSelected());
+                    if (!mCategory.isSelected()) {
+                        imvLike.setImageDrawable(v.getContext().getResources().getDrawable(R.drawable.ic_like));
+                        mRealm.where(Category.class).equalTo(Category.CATEGORY_ID, mCategory.getCategoryId()).findFirst().deleteFromRealm();
+                    } else {
+                        imvLike.setImageDrawable(v.getContext().getResources().getDrawable(R.drawable.ic_like_pink));
+                        mRealm.insertOrUpdate(mCategory);
+                    }
+                    mRealm.commitTransaction();
+                }
+            });
+
         }
     }
 }

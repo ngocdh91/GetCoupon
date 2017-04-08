@@ -3,5 +3,7 @@
     <string name="title_app_name">GETCOUPON.VN</string>
     <string name="title_slogan">Blog chia sẻ Coupon hàng đầu</string>
     <string name="transition_title">transitionTitle</string>
+    <string name="transition_imv_category">transitionImvCategory</string>
+    <string name="transition_like">trans_like</string>
 
 </resources>

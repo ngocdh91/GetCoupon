@@ -2,6 +2,7 @@ package coupon.com.getcoupon;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import coupon.com.getcoupon.model.Category;
+import io.realm.Realm;
 
 /**
  * Created by ngocdh on 4/7/17.
@@ -24,7 +27,11 @@ public class CategoryDetailActivity extends AppCompatActivity {
     TextView mTvTitle;
     @BindView(R.id.imv)
     ImageView imageView;
-    int imageID;
+    @BindView(R.id.float_like)
+    FloatingActionButton mLike;
+    private int imageID;
+    private Realm mRealm;
+    private Category mCategorySelected;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,8 +41,11 @@ public class CategoryDetailActivity extends AppCompatActivity {
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         mTvTitle.setText(getIntent().getStringExtra(TRANSITION_TITLE));
         imageID = getIntent().getIntExtra(TRANSITION_IMAGE, 0);
+        mRealm = Realm.getDefaultInstance();
+        mCategorySelected = mRealm.where(Category.class).equalTo(Category.CATEGORY_ID, imageID).findFirst();
         switch (imageID) {
             case 1:
                 imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_am_thuc));
@@ -80,6 +90,10 @@ public class CategoryDetailActivity extends AppCompatActivity {
                 imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_van_phong_pham));
                 break;
         }
+        if (mCategorySelected == null)
+            mLike.setImageDrawable(getDrawable(R.drawable.ic_like));
+        else
+            mLike.setImageDrawable(getDrawable(R.drawable.ic_like_pink));
 
     }
 

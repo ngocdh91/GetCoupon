@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/accent"
-    android:gravity="center_horizontal"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -17,10 +16,10 @@
 
         <ImageView
             android:id="@+id/imv"
-            android:padding="@dimen/element_padding_normal"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="?attr/actionBarSize"
-            android:transitionName="imvTest" />
+            android:padding="@dimen/element_padding_normal"
+            android:transitionName="@string/transition_imv_category" />
 
         <TextView
             android:id="@+id/title"
@@ -31,5 +30,15 @@
             android:transitionName="@string/transition_title" />
     </android.support.v7.widget.Toolbar>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/float_like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/content_padding_normal"
+        android:src="@drawable/ic_like"
+        android:transitionName="@string/transition_like"
+        android:background="@color/trans_black_25"
+        app:layout_anchor="@id/toolBar"
+        app:layout_anchorGravity="bottom|right|end" />
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

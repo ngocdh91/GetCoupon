@@ -14,6 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import coupon.com.getcoupon.fragment.GetCoupoundFragmentAdapter;
 import coupon.com.getcoupon.widget.DrawerArrowDrawable;
+import io.realm.Realm;
 
 import static android.view.Gravity.START;
 
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     ViewPager mPager;
     @BindView(R.id.tb_slide)
     TabLayout mSlide;
+    Realm mRealm;
 
     private DrawerArrowDrawable drawerArrowDrawable;
     private float offset;
@@ -37,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         final Resources resources = getResources();
-
+        Realm.init(this);
+        mRealm = Realm.getDefaultInstance();
         drawerArrowDrawable = new DrawerArrowDrawable(resources);
         drawerArrowDrawable.setStrokeColor(ContextCompat.getColor(this, R.color.white));
         mImageView.setImageDrawable(drawerArrowDrawable);
