@@ -10,7 +10,7 @@
         android:id="@+id/toolBar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?android:colorPrimary"
+        android:background="@color/colorPrimary"
         android:elevation="4dp"
         app:theme="@style/ToolbarColoredBackArrow">
 
@@ -35,9 +35,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/content_padding_normal"
+        android:background="@color/trans_black_25"
         android:src="@drawable/ic_like"
         android:transitionName="@string/transition_like"
-        android:background="@color/trans_black_25"
         app:layout_anchor="@id/toolBar"
         app:layout_anchorGravity="bottom|right|end" />
 
