@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.holder.BadgeStyle;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
@@ -21,17 +20,17 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import coupon.com.getcoupon.adapter.CategoryAdapter;
 import coupon.com.getcoupon.fragment.GetCoupoundFragmentAdapter;
 import coupon.com.getcoupon.model.Category;
 import coupon.com.getcoupon.widget.DrawerArrowDrawable;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
 import static android.view.Gravity.START;
 
-public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerItemClickListener {
+public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerItemClickListener, CategoryAdapter.ICataLikeClickListener {
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
     @BindView(R.id.drawer_indicator)
@@ -46,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerIt
     private float offset;
     private boolean flipped;
     private Drawer mMaterialDrawer;
-    private RealmChangeListener categoryListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +58,7 @@ public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerIt
         drawerArrowDrawable.setStrokeColor(ContextCompat.getColor(this, R.color.white));
         mImageView.setImageDrawable(drawerArrowDrawable);
         mCategoriesSelected = mRealm.where(Category.class).equalTo(Category.IS_SELECTED, true).findAllSorted(Category.CATEGORY_ID, Sort.ASCENDING);
-        initListener();
-        mCategoriesSelected.addChangeListener(categoryListener);
+
         mDrawer.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
@@ -95,8 +92,8 @@ public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerIt
     public void initDrawer() {
         DrawerBuilder drawerBuilder = new DrawerBuilder()
                 .withActivity(this)
-                .withSliderBackgroundColor(getResources().getColor(R.color.lightblue))
-                .addDrawerItems(new PrimaryDrawerItem().withEnabled(false).withIdentifier(0).withName("Yêu Thích").withIcon(R.drawable.ic_like_pink).withSelectedColor(getResources().getColor(R.color.trans_black_25)))
+                .withSliderBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.bluegrey))
+                .addDrawerItems(new PrimaryDrawerItem().withSelectable(false).withIdentifier(0).withName("Yêu Thích").withIcon(R.drawable.ic_like_pink).withTextColor(ContextCompat.getColor(MainActivity.this, R.color.white)))
                 .withCloseOnClick(true)
                 .withOnDrawerItemClickListener(this)
                 .withOnDrawerListener(new Drawer.OnDrawerListener() {
@@ -118,9 +115,10 @@ public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerIt
             drawerBuilder.addDrawerItems(new SecondaryDrawerItem()
                     .withIdentifier(category.getCategoryId())
                     .withName(category.getName())
-                    .withSelectedColor(getResources().getColor(R.color.trans_black_25))
-                    .withIcon(R.drawable.ic_am_thuc)
-                    .withBadgeStyle(new BadgeStyle().withTextColor(getResources().getColor(R.color.white)).withColorRes(R.color.md_red_700)));
+                    .withSelectedColor(ContextCompat.getColor(MainActivity.this, R.color.white_tran_25))
+                    .withIcon(category.getIcon())
+                    .withSelectedIconColor(ContextCompat.getColor(MainActivity.this, R.color.lightblue))
+                    .withTextColor(ContextCompat.getColor(MainActivity.this, R.color.white)));
             drawerBuilder.addDrawerItems(new DividerDrawerItem());
         }
         drawerBuilder.withSelectedItem(1);
@@ -135,18 +133,11 @@ public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerIt
         return false;
     }
 
-    private void initListener() {
-        categoryListener = new RealmChangeListener() {
-            @Override
-            public void onChange(Object element) {
-                mCategoriesSelected = mRealm.where(Category.class).equalTo(Category.IS_SELECTED, true).findAllSorted(Category.CATEGORY_ID, Sort.ASCENDING);
-                initDrawer();
-            }
-        };
+
+    @Override
+    public void likeClick() {
+        mCategoriesSelected = mRealm.where(Category.class).equalTo(Category.IS_SELECTED, true).findAllSorted(Category.CATEGORY_ID, Sort.ASCENDING);
+        initDrawer();
     }
-//    @Override
-//    public void onChange(Category element) {
-//        mCategoriesSelected = mRealm.where(Category.class).equalTo(Category.IS_SELECTED, true).findAllSorted(Category.CATEGORY_ID, Sort.ASCENDING);
-//        initDrawer();
-//    }
+
 }

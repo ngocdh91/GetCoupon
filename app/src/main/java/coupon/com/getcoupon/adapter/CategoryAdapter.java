@@ -21,6 +21,7 @@ import coupon.com.getcoupon.R;
 import coupon.com.getcoupon.model.Category;
 import io.realm.Realm;
 
+import static coupon.com.getcoupon.CategoryDetailActivity.CATEGORYID;
 import static coupon.com.getcoupon.CategoryDetailActivity.TRANSITION_IMAGE;
 import static coupon.com.getcoupon.CategoryDetailActivity.TRANSITION_TITLE;
 
@@ -32,19 +33,20 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     private final Activity activity;
     List<Category> mCategories;
     Realm mRealm;
+    ICataLikeClickListener mLikeListner;
 
-    public CategoryAdapter(List<Category> mCategories, Activity activity, Realm mRealm) {
+    public CategoryAdapter(List<Category> mCategories, Activity activity, Realm mRealm, ICataLikeClickListener mLikeListner) {
         this.mCategories = mCategories;
         this.activity = activity;
         this.mRealm = mRealm;
-
+        this.mLikeListner = mLikeListner;
     }
 
     @Override
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_category, parent, false);
-        return new CategoryViewHolder(itemView);
+        return new CategoryViewHolder(itemView,mLikeListner);
     }
 
     @Override
@@ -55,57 +57,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                 startActivityTransition(holder.textView, holder.imageView, holder.imvLike, holder.getAdapterPosition());
             }
         });
-        switch (mCategories.get(position).getCategoryId()) {
-            case 1:
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_am_thuc));
-                break;
-            case 2:
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_computer));
-                break;
-            case 3:
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_dien_tu));
-                break;
-            case 4:
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_gia_dung));
-                break;
-            case 5:
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_giai_tri_du_lich));
-                break;
-            case 6:
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_giao_duc));
-                break;
-            case 7:
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_hot_coupon));
-                break;
-            case 8:
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_me_va_be));
-                break;
-            case 9:
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_sach_qua_tang));
-                break;
-            case 10:
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_suc_khoe_lam_dep));
-                break;
-            case 11:
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_tai_chinh_ngan_hang));
-                break;
-            case 12:
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_the_thao));
-                break;
-            case 13:
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_thoi_trang));
-                break;
-            case 14:
-                holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_van_phong_pham));
-                break;
-        }
 
-        if (mRealm.where(Category.class).equalTo(Category.CATEGORY_ID, mCategories.get(holder.getAdapterPosition()).getCategoryId()).findAll().size() != 0) {
+        holder.imageView.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(mCategories.get(position).getIcon()));
+
+
+        if (mCategories.get(holder.getAdapterPosition()).isSelected()) {
             holder.imvLike.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_like_pink));
-            mCategories.get(holder.getAdapterPosition()).setSelected(true);
         } else
             holder.imvLike.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_like));
         holder.textView.setText(mCategories.get(position).getName());
+
     }
 
     private void startActivityTransition(TextView textView, ImageView imageview, ImageView imvLike, int position) {
@@ -114,7 +75,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         Pair<View, String> p2 = Pair.create((View) imageview, activity.getString(R.string.transition_imv_category));
         Pair<View, String> p3 = Pair.create((View) imvLike, activity.getString(R.string.transition_like));
         intent.putExtra(TRANSITION_TITLE, mCategories.get(position).getName());
-        intent.putExtra(TRANSITION_IMAGE, mCategories.get(position).getCategoryId());
+        intent.putExtra(CATEGORYID, mCategories.get(position).getCategoryId());
+        intent.putExtra(TRANSITION_IMAGE, mCategories.get(position).getIcon());
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, p1, p2, p3);
         activity.startActivity(intent, options.toBundle());
     }
@@ -122,6 +84,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @Override
     public int getItemCount() {
         return mCategories.size();
+    }
+
+    public interface ICataLikeClickListener {
+        void likeClick();
     }
 
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
@@ -136,10 +102,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         @BindView(R.id.ln_wrap_category_content)
         LinearLayout mLnWrapContent;
         Category mCategory;
+        ICataLikeClickListener mLikeListner;
 
-        public CategoryViewHolder(View itemView) {
+        public CategoryViewHolder(View itemView, final ICataLikeClickListener mLikeListner) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            this.mLikeListner = mLikeListner;
             mLnWrapContent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -148,12 +116,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                     mCategory.setSelected(!mCategory.isSelected());
                     if (!mCategory.isSelected()) {
                         imvLike.setImageDrawable(v.getContext().getResources().getDrawable(R.drawable.ic_like));
-                        mRealm.where(Category.class).equalTo(Category.CATEGORY_ID, mCategory.getCategoryId()).findFirst().deleteFromRealm();
                     } else {
                         imvLike.setImageDrawable(v.getContext().getResources().getDrawable(R.drawable.ic_like_pink));
-                        mRealm.insertOrUpdate(mCategory);
                     }
                     mRealm.commitTransaction();
+                    mLikeListner.likeClick();
                 }
             });
 

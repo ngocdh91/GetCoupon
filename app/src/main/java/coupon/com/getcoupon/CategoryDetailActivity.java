@@ -3,6 +3,7 @@ package coupon.com.getcoupon;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import io.realm.Realm;
 public class CategoryDetailActivity extends AppCompatActivity {
     public static final String TRANSITION_TITLE = "transition_title";
     public static final String TRANSITION_IMAGE = "transition_image";
+    public static final String CATEGORYID = "categoryid";
     @BindView(R.id.toolBar)
     Toolbar mToolBar;
     @BindView(R.id.title)
@@ -29,7 +31,8 @@ public class CategoryDetailActivity extends AppCompatActivity {
     ImageView imageView;
     @BindView(R.id.float_like)
     FloatingActionButton mLike;
-    private int imageID;
+    private int mCateID;
+    private int imageIcon;
     private Realm mRealm;
     private Category mCategorySelected;
 
@@ -43,57 +46,17 @@ public class CategoryDetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mTvTitle.setText(getIntent().getStringExtra(TRANSITION_TITLE));
-        imageID = getIntent().getIntExtra(TRANSITION_IMAGE, 0);
+        mCateID = getIntent().getIntExtra(CATEGORYID, 0);
+        imageIcon = getIntent().getIntExtra(TRANSITION_IMAGE, 0);
         mRealm = Realm.getDefaultInstance();
-        mCategorySelected = mRealm.where(Category.class).equalTo(Category.CATEGORY_ID, imageID).findFirst();
-        switch (imageID) {
-            case 1:
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_am_thuc));
-                break;
-            case 2:
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_computer));
-                break;
-            case 3:
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_dien_tu));
-                break;
-            case 4:
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_gia_dung));
-                break;
-            case 5:
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_giai_tri_du_lich));
-                break;
-            case 6:
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_giao_duc));
-                break;
-            case 7:
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_hot_coupon));
-                break;
-            case 8:
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_me_va_be));
-                break;
-            case 9:
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_sach_qua_tang));
-                break;
-            case 10:
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_suc_khoe_lam_dep));
-                break;
-            case 11:
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_tai_chinh_ngan_hang));
-                break;
-            case 12:
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_the_thao));
-                break;
-            case 13:
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_thoi_trang));
-                break;
-            case 14:
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_van_phong_pham));
-                break;
-        }
-        if (mCategorySelected == null)
-            mLike.setImageDrawable(getDrawable(R.drawable.ic_like));
+        mCategorySelected = mRealm.where(Category.class).equalTo(Category.CATEGORY_ID, mCateID).findFirst();
+
+        imageView.setImageDrawable(ContextCompat.getDrawable(this, imageIcon));
+
+        if (!mCategorySelected.isSelected())
+            mLike.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like));
         else
-            mLike.setImageDrawable(getDrawable(R.drawable.ic_like_pink));
+            mLike.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like_pink));
 
     }
 

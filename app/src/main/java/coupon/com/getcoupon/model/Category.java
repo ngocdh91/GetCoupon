@@ -14,14 +14,24 @@ public class Category extends RealmObject {
     private int categoryId;
     private String name;
     private boolean isSelected;
+    private int icon;
 
     public Category() {
         // require default Contructor
     }
 
-    public Category(int categoryId, String name) {
+    public Category(int categoryId, String name, int icon) {
         this.categoryId = categoryId;
         this.name = name;
+        this.icon = icon;
+    }
+
+    public int getIcon() {
+        return icon;
+    }
+
+    public void setIcon(int icon) {
+        this.icon = icon;
     }
 
     public int getCategoryId() {

@@ -1,10 +1,10 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="MaterialDrawerTheme.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
     </style>
 
     <style name="ToolbarColoredBackArrow" parent="AppTheme">
