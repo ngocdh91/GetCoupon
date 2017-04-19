@@ -17,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import coupon.com.getcoupon.R;
 import coupon.com.getcoupon.adapter.CategoryAdapter;
+import coupon.com.getcoupon.adapter.ICataLikeClickListener;
 import coupon.com.getcoupon.model.Category;
 import io.realm.Realm;
 import io.realm.Sort;
@@ -30,13 +31,13 @@ public class CategoriesFragment extends Fragment {
     RecyclerView rvCategory;
     List<Category> mCategories = new ArrayList<>();
     Realm mRealm;
-    CategoryAdapter.ICataLikeClickListener mLikeListner;
+    ICataLikeClickListener mLikeListner;
     private CategoryAdapter mAdapter;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mLikeListner = (CategoryAdapter.ICataLikeClickListener) context;
+        mLikeListner = (ICataLikeClickListener) context;
     }
 
     @Nullable

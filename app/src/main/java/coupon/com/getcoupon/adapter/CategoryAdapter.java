@@ -46,7 +46,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_category, parent, false);
-        return new CategoryViewHolder(itemView,mLikeListner);
+        return new CategoryViewHolder(itemView, mLikeListner);
     }
 
     @Override
@@ -86,9 +86,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         return mCategories.size();
     }
 
-    public interface ICataLikeClickListener {
-        void likeClick();
-    }
 
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.imv_category)
@@ -103,7 +100,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         LinearLayout mLnWrapContent;
         Category mCategory;
         ICataLikeClickListener mLikeListner;
-
         public CategoryViewHolder(View itemView, final ICataLikeClickListener mLikeListner) {
             super(itemView);
             ButterKnife.bind(this, itemView);

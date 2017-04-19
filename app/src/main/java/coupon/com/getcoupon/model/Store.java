@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import io.realm.RealmObject;
+
 /**
  * Created by ngocdh on 4/19/17.
  */
@@ -16,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "meta_key",
         "meta_value"
 })
-public class Store {
+public class Store extends RealmObject {
 
     @JsonProperty("name")
     private String name;
@@ -29,6 +31,15 @@ public class Store {
     @JsonProperty("meta_value")
     private String metaValue;
 
+    private boolean isSelected;
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 
     @JsonProperty("name")
     public String getName() {
