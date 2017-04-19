@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Retrofit;
+
 /**
  * Created by ngoc on 4/6/2017.
  */
