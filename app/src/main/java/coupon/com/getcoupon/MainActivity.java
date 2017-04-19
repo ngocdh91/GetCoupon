@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
@@ -18,19 +21,28 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import coupon.com.getcoupon.adapter.CategoryAdapter;
 import coupon.com.getcoupon.fragment.GetCoupoundFragmentAdapter;
+import coupon.com.getcoupon.fragment.IgetRetrofit;
 import coupon.com.getcoupon.model.Category;
 import coupon.com.getcoupon.widget.DrawerArrowDrawable;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import static android.view.Gravity.START;
 
 public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerItemClickListener, CategoryAdapter.ICataLikeClickListener {
+public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerItemClickListener,IgetRetrofit {
+    public static final String BASE_URL = "http://192.168.1.60/wordpress/";
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
     @BindView(R.id.drawer_indicator)
@@ -45,12 +57,15 @@ public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerIt
     private float offset;
     private boolean flipped;
     private Drawer mMaterialDrawer;
+    private RealmChangeListener categoryListener;
+    private Retrofit mRetrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        mRetrofit = getRetrofit(10000);
         final Resources resources = getResources();
         Realm.init(this);
         mRealm = Realm.getDefaultInstance();
@@ -140,4 +155,37 @@ public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerIt
         initDrawer();
     }
 
+
+    //    @Override
+//    public void onChange(Category element) {
+//        mCategoriesSelected = mRealm.where(Category.class).equalTo(Category.IS_SELECTED, true).findAllSorted(Category.CATEGORY_ID, Sort.ASCENDING);
+//        initDrawer();
+//    }
+    private Retrofit getRetrofit(long connectTimeout) {
+        OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
+        if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(interceptor);
+        }
+
+
+        OkHttpClient client = builder.connectTimeout(connectTimeout, TimeUnit.MILLISECONDS)
+                .readTimeout(connectTimeout, TimeUnit.MILLISECONDS)
+                .build();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, true);
+        return new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(client)
+                .addConverterFactory(JacksonConverterFactory.create(objectMapper))
+                .build();
+    }
+
+    @Override
+    public Retrofit getRetrofit() {
+        return mRetrofit;
+    }
 }
