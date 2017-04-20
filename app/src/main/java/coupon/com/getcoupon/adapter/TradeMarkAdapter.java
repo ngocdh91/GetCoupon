@@ -18,14 +18,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import coupon.com.getcoupon.CategoryDetailActivity;
 import coupon.com.getcoupon.R;
+import coupon.com.getcoupon.StoreDetailActivity;
 import coupon.com.getcoupon.model.Store;
 import io.realm.Realm;
 
-import static coupon.com.getcoupon.CategoryDetailActivity.CATEGORYID;
-import static coupon.com.getcoupon.CategoryDetailActivity.TRANSITION_IMAGE;
-import static coupon.com.getcoupon.CategoryDetailActivity.TRANSITION_TITLE;
+import static coupon.com.getcoupon.StoreDetailActivity.STORE_ID;
+import static coupon.com.getcoupon.StoreDetailActivity.TRANSITION_IMAGE;
+import static coupon.com.getcoupon.StoreDetailActivity.TRANSITION_TITLE;
+
 
 /**
  * Created by ngocdh on 4/8/17.
@@ -60,7 +61,7 @@ public class TradeMarkAdapter extends RecyclerView.Adapter<TradeMarkAdapter.Trad
             }
         });
 
-        Glide.with(activity).load(mStores.get(holder.getAdapterPosition())).into(holder.imageView);
+        Glide.with(activity).load(mStores.get(holder.getAdapterPosition()).getMetaValue()).into(holder.imageView);
 
         if (mStores.get(holder.getAdapterPosition()).isSelected()) {
             holder.imvLike.setImageDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_like_pink));
@@ -70,20 +71,21 @@ public class TradeMarkAdapter extends RecyclerView.Adapter<TradeMarkAdapter.Trad
     }
 
     private void startActivityTransition(TextView textView, ImageView imageview, ImageView imvLike, int position) {
-        Intent intent = new Intent(activity, CategoryDetailActivity.class);
+        Intent intent = new Intent(activity, StoreDetailActivity.class);
         Pair<View, String> p1 = Pair.create((View) textView, activity.getString(R.string.transition_title));
         Pair<View, String> p2 = Pair.create((View) imageview, activity.getString(R.string.transition_imv_category));
         Pair<View, String> p3 = Pair.create((View) imvLike, activity.getString(R.string.transition_like));
-        intent.putExtra(TRANSITION_TITLE, mStores.get(position).getName());
-        intent.putExtra(CATEGORYID, mStores.get(position).getTermId());
-        intent.putExtra(TRANSITION_IMAGE, mStores.get(position).getMetaValue());
+        Store store = mStores.get(position);
+        intent.putExtra(TRANSITION_TITLE, store.getName());
+        intent.putExtra(STORE_ID, store.getTermId());
+        intent.putExtra(TRANSITION_IMAGE, store.getMetaValue());
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, p1, p2, p3);
         activity.startActivity(intent, options.toBundle());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mStores.size();
     }
 
     public class TradeMarkViewHolder extends RecyclerView.ViewHolder {

@@ -3,6 +3,7 @@ package coupon.com.getcoupon;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -29,7 +30,6 @@ import coupon.com.getcoupon.adapter.ICataLikeClickListener;
 import coupon.com.getcoupon.fragment.GetCoupoundFragmentAdapter;
 import coupon.com.getcoupon.fragment.IgetRetrofit;
 import coupon.com.getcoupon.model.Category;
-import coupon.com.getcoupon.model.Store;
 import coupon.com.getcoupon.widget.DrawerArrowDrawable;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -43,7 +43,7 @@ import static android.view.Gravity.START;
 
 public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerItemClickListener, ICataLikeClickListener, IgetRetrofit {
 
-    public static final String BASE_URL = "http://192.168.0.101/wordpress/";
+    public static final String BASE_URL = "http://192.168.1.60/wordpress/";
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
     @BindView(R.id.drawer_indicator)

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,7 +33,6 @@ import retrofit2.Retrofit;
  */
 
 public class TrademarkFragment extends Fragment {
-    public static final String ARG_RETROFIT = "arg_retrofit";
     IgetRetrofit mListener;
     List<Store> mStores = new ArrayList<>();
     Realm mRealm;
@@ -51,23 +51,14 @@ public class TrademarkFragment extends Fragment {
         mRealm = Realm.getDefaultInstance();
         mStores = new ArrayList<>();
         mAdapter = new TradeMarkAdapter(mStores, getActivity(), mRealm, mLikeListner);
-        mCallResponse = retrofit.create(AppApi.class).getStore();
 
-        mCallResponse.enqueue(new Callback<List<Store>>() {
-            @Override
-            public void onResponse(Call<List<Store>> call, Response<List<Store>> response) {
-                for (Store store : response.body()) {
-                    Log.d("Đây là store", store.getName());
-                }
-                mStores.addAll(response.body());
-                mAdapter.notifyDataSetChanged();
-            }
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
+        mStores.addAll(mRealm.where(Store.class).findAll());
+        if (mStores.size() == 0) getData();
+        mAdapter.notifyDataSetChanged();
+        rvStore.setLayoutManager(mLayoutManager);
+        rvStore.setAdapter(mAdapter);
 
-            @Override
-            public void onFailure(Call<List<Store>> call, Throwable t) {
-                Toast.makeText(getContext(), "Không thể kết nối tới máy chủ", Toast.LENGTH_LONG).show();
-            }
-        });
         return rootView;
     }
 
@@ -77,5 +68,30 @@ public class TrademarkFragment extends Fragment {
         mListener = (IgetRetrofit) context;
         retrofit = mListener.getRetrofit();
         mLikeListner = (ICataLikeClickListener) context;
+    }
+
+    public void getData() {
+        mCallResponse = retrofit.create(AppApi.class).getStore();
+        mCallResponse.enqueue(new Callback<List<Store>>() {
+            @Override
+            public void onResponse(Call<List<Store>> call, Response<List<Store>> response) {
+                for (Store store : response.body()) {
+                    Log.d("Đây là store", store.getName());
+                }
+                mStores.addAll(response.body());
+                mAdapter.notifyDataSetChanged();
+                mRealm.beginTransaction();
+                mRealm.where(Store.class).findAll().deleteAllFromRealm();
+                mRealm.insert(response.body());
+                mRealm.commitTransaction();
+            }
+
+            @Override
+            public void onFailure(Call<List<Store>> call, Throwable t) {
+                Log.d("Đây Là lỗi", t.getMessage());
+                t.printStackTrace();
+                Toast.makeText(getContext(), "Không thể kết nối tới máy chủ", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

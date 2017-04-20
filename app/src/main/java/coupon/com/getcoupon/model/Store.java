@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by ngocdh on 4/19/17.
@@ -19,10 +20,11 @@ import io.realm.RealmObject;
         "meta_value"
 })
 public class Store extends RealmObject {
-
+    public static final String STORE_ID = "termId";
     @JsonProperty("name")
     private String name;
     @JsonProperty("term_id")
+    @PrimaryKey
     private String termId;
     @JsonProperty("meta_id")
     private String metaId;
