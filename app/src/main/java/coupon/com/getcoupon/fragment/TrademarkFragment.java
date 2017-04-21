@@ -75,15 +75,18 @@ public class TrademarkFragment extends Fragment {
         mCallResponse.enqueue(new Callback<List<Store>>() {
             @Override
             public void onResponse(Call<List<Store>> call, Response<List<Store>> response) {
-                for (Store store : response.body()) {
-                    Log.d("Đây là store", store.getName());
+                if (response.code() == 200) {
+                    for (Store store : response.body()) {
+                        Log.d("Đây là store", store.getName());
+                    }
+                    mStores.addAll(response.body());
+                    mAdapter.notifyDataSetChanged();
+                    mRealm.beginTransaction();
+                    mRealm.where(Store.class).findAll().deleteAllFromRealm();
+                    mRealm.insert(response.body());
+                    mRealm.commitTransaction();
                 }
-                mStores.addAll(response.body());
-                mAdapter.notifyDataSetChanged();
-                mRealm.beginTransaction();
-                mRealm.where(Store.class).findAll().deleteAllFromRealm();
-                mRealm.insert(response.body());
-                mRealm.commitTransaction();
+                else { Toast.makeText(getContext(), "Không thể kết nối tới máy chủ", Toast.LENGTH_LONG).show();}
             }
 
             @Override
