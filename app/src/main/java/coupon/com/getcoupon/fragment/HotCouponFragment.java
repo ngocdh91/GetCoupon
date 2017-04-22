@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import coupon.com.getcoupon.AppApi;
 import coupon.com.getcoupon.R;
-import coupon.com.getcoupon.adapter.ICataLikeClickListener;
+import coupon.com.getcoupon.adapter.CoupondAdapter;
 import coupon.com.getcoupon.model.Coupon;
-import coupon.com.getcoupon.model.Store;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,13 +31,18 @@ public class HotCouponFragment extends Fragment {
     IgetRetrofit mListener;
     @BindView(R.id.rv_store)
     RecyclerView rvCoupoun;
+    List<Coupon> mCoupons = new ArrayList<>();
+    CoupondAdapter mAdapter;
     private Retrofit retrofit;
-    List<Store> mStores = new ArrayList<>();
     private Call<List<Coupon>> mCallResponse;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.hot_coupon_fragment, container, false);
+        ButterKnife.bind(rootView);
+        mAdapter = new CoupondAdapter(mCoupons, getActivity());
+        getData();
         return rootView;
     }
 
@@ -48,11 +53,15 @@ public class HotCouponFragment extends Fragment {
         retrofit = mListener.getRetrofit();
     }
 
-    private void getData(){
+    private void getData() {
         mCallResponse = retrofit.create(AppApi.class).getCoupon("51");
         mCallResponse.enqueue(new Callback<List<Coupon>>() {
             @Override
             public void onResponse(Call<List<Coupon>> call, Response<List<Coupon>> response) {
+                if (response.body().get(0).getPostStatus() != "no item") {
+                    mCoupons.addAll(response.body());
+                    mAdapter.notifyDataSetChanged();
+                }
 
             }
 

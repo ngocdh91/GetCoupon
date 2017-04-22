@@ -1,5 +1,6 @@
 package coupon.com.getcoupon;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -7,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -58,6 +60,13 @@ public class StoreDetailActivity extends AppCompatActivity {
         else
             mLike.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like_pink));
 
+        mLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(StoreDetailActivity.this, TestActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     @Override

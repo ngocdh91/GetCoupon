@@ -19,6 +19,7 @@
         </activity>
         <activity android:name=".CategoryDetailActivity" />
         <activity android:name=".StoreDetailActivity" />
+        <activity android:name=".TestActivity" />
     </application>
 
 </manifest>

@@ -17,7 +17,8 @@ import io.realm.RealmObject;
         "post_name",
         "guid",
         "code",
-        "expire"
+        "expire",
+        "post_title"
 })
 public class Coupon extends RealmObject {
     @JsonProperty("ID")
@@ -34,6 +35,9 @@ public class Coupon extends RealmObject {
     private String code;
     @JsonProperty("expire")
     private String expire;
+    @JsonProperty("post_title")
+    private String post_title;
+
 
     @JsonProperty("ID")
     public String getID() {
@@ -104,6 +108,12 @@ public class Coupon extends RealmObject {
     public void setExpire(String expire) {
         this.expire = expire;
     }
-
-
+    @JsonProperty("post_title")
+    public String getPost_title() {
+        return post_title;
+    }
+    @JsonProperty("post_title")
+    public void setPost_title(String post_title) {
+        this.post_title = post_title;
+    }
 }
