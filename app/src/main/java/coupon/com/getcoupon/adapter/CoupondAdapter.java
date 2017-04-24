@@ -16,6 +16,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import coupon.com.getcoupon.R;
 import coupon.com.getcoupon.model.Coupon;
 
@@ -40,7 +41,7 @@ public class CoupondAdapter extends RecyclerView.Adapter<CoupondAdapter.CoupondA
     @Override
     public CoupondAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_category, parent, false);
+                .inflate(R.layout.item_coupond, parent, false);
         return new CoupondAdapterViewHolder(itemView);
     }
 
@@ -50,9 +51,11 @@ public class CoupondAdapter extends RecyclerView.Adapter<CoupondAdapter.CoupondA
         // Glide.with(activity).load(mCoupons.get(holder.getAdapterPosition()).getGuid()).into(holder.imv_store);
         holder.tv_content.setText(mCoupons.get(position).getPostContent());
         holder.tv_des.setText(mCoupons.get(position).getPost_title());
-        long time = Long.parseLong(mCoupons.get(position).getExpire());
-        calendar.setTimeInMillis(time);
-        holder.tv_expire.setText(getFullFormatTime(calendar.getTimeInMillis()));
+        if (mCoupons.get(position).getExpire() != 0) {
+            calendar.setTimeInMillis(mCoupons.get(position).getExpire());
+            holder.tv_expire.setText(getFullFormatTime(calendar.getTimeInMillis()));
+        }
+
         holder.tv_code.setText(mCoupons.get(position).getCode());
 
     }
@@ -83,6 +86,7 @@ public class CoupondAdapter extends RecyclerView.Adapter<CoupondAdapter.CoupondA
 
         public CoupondAdapterViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
 
         }
     }

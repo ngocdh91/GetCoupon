@@ -2,12 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_tran_75"
     android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_store"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="@dimen/element_padding_normal" />
 </LinearLayout>

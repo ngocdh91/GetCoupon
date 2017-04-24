@@ -4,10 +4,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +43,14 @@ public class HotCouponFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.hot_coupon_fragment, container, false);
-        ButterKnife.bind(rootView);
+        ButterKnife.bind(this, rootView);
         mAdapter = new CoupondAdapter(mCoupons, getActivity());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        rvCoupoun.setLayoutManager(mLayoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvCoupoun.getContext(),
+                LinearLayout.HORIZONTAL);
+        rvCoupoun.addItemDecoration(dividerItemDecoration);
+        rvCoupoun.setAdapter(mAdapter);
         getData();
         return rootView;
     }
@@ -54,14 +63,16 @@ public class HotCouponFragment extends Fragment {
     }
 
     private void getData() {
+        mCoupons.clear();
         mCallResponse = retrofit.create(AppApi.class).getCoupon("51");
         mCallResponse.enqueue(new Callback<List<Coupon>>() {
             @Override
             public void onResponse(Call<List<Coupon>> call, Response<List<Coupon>> response) {
-                if (response.body().get(0).getPostStatus() != "no item") {
-                    mCoupons.addAll(response.body());
-                    mAdapter.notifyDataSetChanged();
-                }
+                if (response.code() == 200)
+                    if (response.body().get(0).getPostStatus() != "no item") {
+                        mCoupons.addAll(response.body());
+                        mAdapter.notifyDataSetChanged();
+                    }
 
             }
 

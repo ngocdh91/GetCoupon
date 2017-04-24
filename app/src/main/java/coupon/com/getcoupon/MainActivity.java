@@ -42,7 +42,7 @@ import static android.view.Gravity.START;
 
 public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerItemClickListener, ICataLikeClickListener, IgetRetrofit {
 
-    public static final String BASE_URL = "http://192.168.1.60/";
+    public static final String BASE_URL = "http://192.168.0.100/";
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
     @BindView(R.id.drawer_indicator)
@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerIt
         DrawerBuilder drawerBuilder = new DrawerBuilder()
                 .withActivity(this)
                 .withSliderBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.grey))
+                .addDrawerItems(new PrimaryDrawerItem().withSelectable(false).withIdentifier(1000).withName("Fan Page").withIcon(R.drawable.ic_like_pink).withTextColor(ContextCompat.getColor(MainActivity.this, R.color.white)))
                 .addDrawerItems(new PrimaryDrawerItem().withSelectable(false).withIdentifier(0).withName("Yêu Thích").withIcon(R.drawable.ic_like_pink).withTextColor(ContextCompat.getColor(MainActivity.this, R.color.white)))
                 .withCloseOnClick(true)
                 .withOnDrawerItemClickListener(this)

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <ImageView
@@ -14,19 +14,22 @@
 
     <RelativeLayout
         android:layout_width="0dp"
-        android:layout_height="100dp"
-        android:layout_weight="0.6">
+        android:layout_height="wrap_content"
+        android:layout_weight="0.6"
+        android:padding="@dimen/element_padding_normal">
 
         <TextView
             android:id="@+id/tv_coupond_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:maxLines="2" />
 
         <TextView
             android:id="@+id/tv_coupond_descreption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_coupond_content" />
+            android:layout_below="@id/tv_coupond_content"
+            android:maxLines="1" />
 
         <TextView
             android:id="@+id/tv_expire"
@@ -37,25 +40,25 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_expire">
-
-            <ImageView
-                android:layout_width="150dp"
-                android:layout_height="24dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/item" />
+            android:layout_below="@+id/tv_expire"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/tv_code"
                 android:layout_width="150dp"
-                android:layout_height="24dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/code_bg"
                 android:gravity="center_vertical"
+                android:padding="@dimen/element_spacing_normal"
                 android:textAlignment="center"
-                android:textSize="24dp"
-                tools:text="tesst"
+                android:textSize="20sp"
+                tools:text="tesst" />
 
-                />
-
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="35dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/item" />
         </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>
